@@ -1,0 +1,9 @@
+PASOS RÁPIDOS
+1. Supabase > SQL Editor > ejecutar supabase/setup.sql
+2. Supabase > Authentication > Users > crear tu usuario administrador
+3. Supabase > Connect > copiar Project URL y Publishable/anon key
+4. Pegar ambos datos en js/config.js
+5. Subir toda esta carpeta a GitHub
+6. Conectar el repositorio a Netlify
+7. Entrar a /admin/ e iniciar sesión
+8. Si la base está vacía, pulsar “IMPORTAR DATOS DEL HTML ORIGINAL”

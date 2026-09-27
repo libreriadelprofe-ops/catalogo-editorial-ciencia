@@ -1,0 +1,97 @@
+
+:root{
+  --blue:#0b67a3;--blue2:#003f69;--blue3:#eaf5fc;--light:#f4f8fb;
+  --border:#d8e1e8;--green:#1d8b49;--red:#b42318;--text:#17212b;
+  --muted:#65717c;--shadow:0 2px 12px #0000000c;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef3f6;color:var(--text)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.siteHeader{
+  background:linear-gradient(135deg,var(--blue2),var(--blue));color:white;padding:18px 24px;
+  box-shadow:0 2px 12px #0002;display:flex;gap:18px;align-items:center;justify-content:space-between
+}
+.siteHeader h1{margin:0;font-size:24px}.siteHeader p{margin:5px 0 0;opacity:.9;font-size:13px}
+.headerActions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.headerLink{display:inline-flex;align-items:center;gap:7px;text-decoration:none;background:#ffffff18;border:1px solid #ffffff55;color:#fff;border-radius:9px;padding:9px 12px;font-weight:700}
+.headerLink:hover{background:#ffffff2a}
+.pageShell{max-width:1320px;margin:20px auto;padding:0 16px}
+.card{background:white;border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
+.searchBox{max-width:760px;margin:0 0 18px}.searchBox label{display:block;font-family:'Times New Roman',serif;font-weight:700;font-size:18px;margin-bottom:10px}
+.searchLine{display:flex;gap:8px}.searchLine input{flex:1;padding:13px 14px;border:2px solid #333;border-radius:12px;font-size:16px;outline:none}
+.searchLine button{width:54px;border:none;border-radius:12px;background:linear-gradient(135deg,#165d8f,#4da6dc);color:white;font-size:22px}
+.hint{font-size:12px;color:var(--muted)}.muted{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1.8fr;gap:20px}
+.tableWrap{overflow:auto;max-height:620px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border:1px solid #d9e0e5;padding:8px;text-align:left;vertical-align:middle}
+th{background:#e9f1f7;position:sticky;top:0;z-index:1}
+tr.resultRow{cursor:pointer}tr.resultRow:hover{background:#f0f8ff}tr.resultRow.selected{outline:2px solid #2d86bf;outline-offset:-2px;background:#e7f5ff}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-weight:700;font-size:12px}
+.ok{background:#dff4e7;color:#126b34}.out{background:#fde4e1;color:#9f271d}
+.preview{min-height:650px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:25px}
+.preview img{max-width:420px;max-height:450px;object-fit:contain;border-radius:8px;box-shadow:0 4px 16px #0002;margin-bottom:16px}
+.preview .noimg{width:min(350px,100%);height:350px;display:grid;place-items:center;background:#f1f3f5;color:#68727b;border:1px dashed #adb5bd;border-radius:8px;margin-bottom:16px}
+.previewInfo{width:100%;text-align:left;line-height:1.55;border-top:1px solid var(--border);padding-top:14px}
+.previewInfo h2{margin:0 0 6px;font-size:24px}.previewInfo p{margin:6px 0}
+.categoryPills{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.categoryPills button{border:1px solid var(--border);background:#fff;border-radius:999px;padding:9px 14px;font-weight:700;color:#34414d}
+.categoryPills button.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn{border:none;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}
+.primary{background:var(--blue);color:white}.success{background:var(--green);color:#fff}.danger{background:var(--red);color:#fff}.ghost{background:#edf2f5;color:#22303b}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 14px}
+.toolbar input{max-width:350px}.right{margin-left:auto}
+.bookThumb{width:44px;height:58px;object-fit:cover;border-radius:5px;border:1px solid #cfd8df;display:block;margin:auto}
+.imgEmpty{font-size:11px;color:#77818a;text-align:center}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:#fff;padding:14px;border:1px solid var(--border);border-radius:12px}.kpi span{font-size:12px;color:var(--muted)}.kpi b{font-size:22px;display:block;margin-top:5px}
+.modal{display:none;position:fixed;inset:0;background:#0007;z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal.open{display:flex}.modalCard{background:white;max-width:900px;width:100%;max-height:94vh;overflow:auto;border-radius:14px;padding:20px;box-shadow:0 20px 80px #0005}
+.modalCard.large{max-width:1050px}.modalActions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;flex-wrap:wrap}
+.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.formGrid .full{grid-column:1/-1}
+label.small{font-size:12px;font-weight:700;display:block;margin-bottom:5px}
+input,select,textarea{border:1px solid #b9c3cb;border-radius:8px;padding:9px 10px;width:100%;background:#fff}
+textarea{min-height:90px;resize:vertical}
+.fileBox{border:1px dashed #aeb8c1;background:#f8fafb;border-radius:10px;padding:12px}
+.filePreview{display:flex;gap:12px;align-items:center;margin-top:10px;min-height:70px;color:var(--muted)}
+.filePreview img{width:70px;height:90px;object-fit:cover;border-radius:6px;border:1px solid var(--border)}
+.pdfFrame{width:100%;height:72vh;border:1px solid var(--border);border-radius:10px;background:#f4f4f4}
+.toast{position:fixed;right:18px;bottom:18px;background:#17212b;color:white;padding:12px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:.25s;z-index:200;max-width:360px}
+.toast.show{opacity:1}.toast.error{background:#8c1d18}.toast.okay{background:#126b34}
+.loading{display:flex;align-items:center;gap:10px;color:var(--muted);padding:12px 0}
+.spinner{width:18px;height:18px;border:2px solid #ccd7df;border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Admin */
+.adminBody{min-height:100vh}
+.adminLayout{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:calc(100vh - 86px)}
+.adminNav{background:#fff;border-right:1px solid var(--border);padding:18px 14px;position:sticky;top:0;height:calc(100vh - 86px);overflow:auto}
+.adminNav h3{margin:0 8px 12px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.adminNav button,.adminNav a{width:100%;display:block;text-align:left;border:1px solid var(--border);background:#fff;border-radius:8px;padding:13px 14px;font-weight:700;margin-bottom:9px;text-decoration:none}
+.adminNav button.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.adminMain{padding:20px;min-width:0}
+.loginWrap{min-height:calc(100vh - 86px);display:grid;place-items:center;padding:20px}.loginCard{max-width:440px;width:100%}
+.loginCard h2{margin-top:0}.loginCard form{display:grid;gap:12px}
+.statusStrip{display:flex;gap:8px;align-items:center;padding:10px 12px;border:1px solid #bcd7e9;background:#edf8ff;border-radius:9px;margin-bottom:14px;color:#285c79;font-size:13px}
+.hidden{display:none!important}
+.tableActions{display:flex;gap:6px;flex-wrap:wrap}
+.tableActions .btn{padding:7px 9px;font-size:12px}
+.sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sectionTitle h2{margin:0}
+.seedCard{border:1px dashed #8bb9d7;background:#f3faff}
+.footer{max-width:1320px;margin:25px auto;padding:0 16px 30px;color:#67727c;font-size:12px}
+
+@media(max-width:900px){
+  .grid2{grid-template-columns:1fr}.preview{min-height:auto}.preview img{max-width:280px;max-height:360px}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .adminLayout{grid-template-columns:1fr}.adminNav{position:relative;height:auto;display:flex;gap:8px;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--border)}
+  .adminNav h3{width:100%}.adminNav button,.adminNav a{width:auto;margin:0}
+}
+@media(max-width:650px){
+  .siteHeader{align-items:flex-start;flex-direction:column}.formGrid{grid-template-columns:1fr}.formGrid .full{grid-column:auto}
+  .kpis{grid-template-columns:1fr 1fr}.pageShell,.adminMain{padding-left:10px;padding-right:10px}
+  .preview .noimg{height:260px}.pdfFrame{height:65vh}
+}
