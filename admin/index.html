@@ -1,37 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Administrador de Catálogo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Administrador — Catálogo de libros</title>
+  <!-- Ruta correcta a tu CSS original -->
+  <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
-    <h2>Formulario de Libros</h2>
-    <form id="form-libro">
-        <label>Título:</label>
-        <input type="text" id="titulo-libro" required>
-        
-        <label>Categoría:</label>
-        <select id="categoria-libro">
-            <!-- Cargado dinámicamente -->
-        </select>
-        
-        <label>Ubicación (Mapa/Imagen):</label>
-        <input type="file" id="ubicacion-img" accept="image/*">
-        
-        <button type="submit">Guardar Libro</button>
-    </form>
-    
-    <hr>
-    
-    <div id="gestion-categorias">
-        <h3>Gestionar Categorías</h3>
-        <input type="text" id="nueva-categoria" placeholder="Nombre de nueva categoría">
-        <button id="btn-agregar-categoria">Agregar Categoría</button>
-        <ul id="lista-categorias">
-            <!-- Cargado dinámicamente -->
-        </ul>
+  <header class="siteHeader">
+    <div>
+      <h1>Administrador de Catálogo</h1>
+      <p>Agrega libros y gestiona tus categorías.</p>
     </div>
+  </header>
 
-    <script src="../js/admin.js"></script>
+  <main class="pageShell">
+    <div class="card">
+      <div class="sectionTitle">
+        <h2>Formulario de Libros</h2>
+      </div>
+      <form id="form-libro" style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+        <div>
+          <label>Título:</label><br>
+          <input type="text" id="titulo-libro" required class="searchLine" style="width: 100%; padding: 8px;">
+        </div>
+        
+        <div>
+          <label>Categoría:</label><br>
+          <select id="categoria-libro" class="searchLine" style="width: 100%; padding: 8px;"></select>
+        </div>
+        
+        <div>
+          <label>Ubicación (Mapa/Imagen):</label><br>
+          <input type="file" id="ubicacion-img" accept="image/*" style="margin-top: 5px;">
+        </div>
+        
+        <button type="submit" class="btn orange" style="width: fit-content;">Guardar Libro</button>
+      </form>
+    </div>
+    
+    <div class="card" style="margin-top: 20px;">
+      <div class="sectionTitle">
+        <h2>Gestionar Categorías</h2>
+      </div>
+      <div class="searchLine" style="margin-top: 15px; display: flex; gap: 10px;">
+        <input type="text" id="nueva-categoria" placeholder="Nombre de nueva categoría" style="flex: 1; padding: 8px;">
+        <button id="btn-agregar-categoria" class="btn orange">Agregar</button>
+      </div>
+      <ul id="lista-categorias" style="list-style: none; padding: 0; margin-top: 20px;">
+        <!-- Aquí se cargarán las categorías dinámicamente -->
+      </ul>
+    </div>
+  </main>
+
+  <!-- Importación de librerías y TUS archivos de configuración original -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/config.js"></script>
+  <script src="/js/supabase-client.js"></script>
+  <script src="/js/admin.js"></script>
 </body>
 </html>
