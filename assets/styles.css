@@ -95,10 +95,3 @@ textarea{min-height:90px;resize:vertical}
   .kpis{grid-template-columns:1fr 1fr}.pageShell,.adminMain{padding-left:10px;padding-right:10px}
   .preview .noimg{height:260px}.pdfFrame{height:65vh}
 }
-
-.coverGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:20px}
-.bookCard{background:white;border:1px solid #ddd;border-radius:12px;padding:12px;text-align:center;cursor:pointer;box-shadow:0 2px 8px #0002}
-.bookCard img{height:240px;width:100%;object-fit:contain}
-.bookCard b,.bookCard small{display:block;margin-top:8px}
-.orange{background:#ff7a00;color:white}.orangeButtons{display:flex;gap:10px;margin-top:15px}
-.hidden{display:none!important}
