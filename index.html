@@ -20,7 +20,7 @@
     <p class="hint">Edita <code>js/config.js</code> y coloca la URL y la clave pública de tu proyecto.</p>
   </div>
 
-  <div class="card searchBox" id="searchBoxContainer">
+  <div class="card searchBox">
     <label for="search">INGRESE EL CÓDIGO, TÍTULO O AUTOR DE LA OBRA:</label>
     <div class="searchLine">
       <input id="search" placeholder="Escribe un código, título o autor." autocomplete="off">
@@ -37,17 +37,15 @@
   </div>
 
   <div class="grid2">
-    <section id="listaResultados" class="card">
+    <section class="card">
       <div class="sectionTitle">
         <h2 style="font-size:18px">Resultados</h2>
         <span class="hint" id="resultCount"></span>
       </div>
       <div id="resultsMsg" class="hint">Cargando catálogo...</div>
-      <div id="resultsGrid"></div>
+<div id="resultsGrid"></div>
     </section>
-    
-    <section id="previewCard" class="card preview hidden">
-      <button id="btnVolver" class="btn hidden" style="margin-bottom: 15px; background: #2c3e50; color: white;">&larr; Volver al catálogo</button>
+   <section id="previewCard" class="card preview">
       <div id="imageArea" class="noimg">Sin imagen disponible</div>
       <div id="previewInfo" class="previewInfo">
         <h2>Selecciona una obra</h2>
