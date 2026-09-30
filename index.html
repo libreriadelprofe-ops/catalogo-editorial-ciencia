@@ -1,76 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Editorial Ciencia — Catálogo de libros</title>
-<link rel="stylesheet" href="/assets/styles.css">
+    <meta charset="UTF-8">
+    <title>Catálogo Editorial</title>
+    <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-<header class="siteHeader">
-  <div>
-    <h1>EDITORIAL CIENCIA — Catálogo de libros</h1>
-    <p>Consulta obras extranjeras, obras nacionales y libros preuniversitarios.</p>
-  </div>
-</header>
+    <header>
+        <h1>Catálogo de Libros</h1>
+        <input type="text" id="buscador-libros" placeholder="Buscar libro por título o autor...">
+    </header>
+    
+    <main>
+        <div id="grilla-libros">
+            <!-- La grilla de libros se renderiza aquí -->
+        </div>
 
-<main class="pageShell">
-  <div id="configWarning" class="card hidden">
-    <b>Falta conectar Supabase.</b>
-    <p class="hint">Edita <code>js/config.js</code> y coloca la URL y la clave pública de tu proyecto.</p>
-  </div>
+        <div id="detalle-libro" style="display: none;">
+            <button id="btn-volver">Volver al catálogo</button>
+            <div id="contenido-detalle"></div>
+        </div>
+    </main>
 
-  <div class="card searchBox">
-    <label for="search">INGRESE EL CÓDIGO, TÍTULO O AUTOR DE LA OBRA:</label>
-    <div class="searchLine">
-      <input id="search" placeholder="Escribe un código, título o autor." autocomplete="off">
-      <button id="searchBtn" title="Buscar">🔎</button>
-    </div>
-    <div class="hint" style="margin-top:7px">También puedes presionar Enter.</div>
-  </div>
-
-  <div class="categoryPills" id="categoryPills">
-    <button class="active" data-category="">Todos</button>
-    <button data-category="Obras extranjeras">Obras extranjeras</button>
-    <button data-category="Obras nacionales">Obras nacionales</button>
-    <button data-category="Libros preuniversitarios">Libros preuniversitarios</button>
-  </div>
-
-  <div class="grid2">
-    <section class="card">
-      <div class="sectionTitle">
-        <h2 style="font-size:18px">Resultados</h2>
-        <span class="hint" id="resultCount"></span>
-      </div>
-      <div id="resultsMsg" class="hint">Cargando catálogo...</div>
-<div id="resultsGrid"></div>
-    </section>
-   <section id="previewCard" class="card preview">
-      <div id="imageArea" class="noimg">Sin imagen disponible</div>
-      <div id="previewInfo" class="previewInfo">
-        <h2>Selecciona una obra</h2>
-        <p class="muted">Aquí se mostrará la información del libro y, si existe, su PDF de índice o muestra.</p>
-      </div>
-    </section>
-  </div>
-</main>
-
-<footer class="footer">Editorial Ciencia · Catálogo conectado a Supabase.</footer>
-
-<div id="pdfModal" class="modal" aria-hidden="true">
-  <div class="modalCard large">
-    <div class="sectionTitle">
-      <h2 id="pdfTitle">Muestra del libro</h2>
-      <button class="btn ghost" id="closePdf">Cerrar</button>
-    </div>
-    <iframe id="pdfFrame" class="pdfFrame" title="PDF de muestra"></iframe>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/js/config.js"></script>
-<script src="/js/supabase-client.js"></script>
-<script src="/js/catalogo.js"></script>
+    <script src="js/catalogo.js"></script>
 </body>
 </html>

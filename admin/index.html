@@ -1,178 +1,37 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Editorial Ciencia — Administrador</title>
-<link rel="stylesheet" href="/assets/styles.css">
+    <meta charset="UTF-8">
+    <title>Administrador de Catálogo</title>
 </head>
-<body class="adminBody">
-<header class="siteHeader">
-  <div>
-    <h1>EDITORIAL CIENCIA — Administrador</h1>
-    <p>Gestión de obras, portadas, PDFs, inventario y ventas.</p>
-  </div>
-  <div class="headerActions">
-    <a class="headerLink" href="/">👤 Ver catálogo usuario</a>
-    <button id="logoutBtn" class="headerLink hidden" type="button">Cerrar sesión</button>
-  </div>
-</header>
-
-<section id="loginView" class="loginWrap">
-  <div class="card loginCard">
-    <h2>Acceso de administrador</h2>
-    <p class="hint">Inicia sesión con el correo y contraseña creados en Supabase Authentication.</p>
-    <div id="loginConfigWarning" class="statusStrip hidden">Primero configura <code>js/config.js</code> con tu proyecto de Supabase.</div>
-    <form id="loginForm">
-      <div>
-        <label class="small" for="email">Correo</label>
-        <input id="email" type="email" autocomplete="username" required>
-      </div>
-      <div>
-        <label class="small" for="password">Contraseña</label>
-        <input id="password" type="password" autocomplete="current-password" required>
-      </div>
-      <button class="btn primary" type="submit">INICIAR SESIÓN</button>
+<body>
+    <h2>Formulario de Libros</h2>
+    <form id="form-libro">
+        <label>Título:</label>
+        <input type="text" id="titulo-libro" required>
+        
+        <label>Categoría:</label>
+        <select id="categoria-libro">
+            <!-- Cargado dinámicamente -->
+        </select>
+        
+        <label>Ubicación (Mapa/Imagen):</label>
+        <input type="file" id="ubicacion-img" accept="image/*">
+        
+        <button type="submit">Guardar Libro</button>
     </form>
-    <p id="loginMsg" class="hint"></p>
-  </div>
-</section>
-
-<section id="adminView" class="adminLayout hidden">
-  <nav class="adminNav">
-    <h3>Administración</h3>
-    <button class="active" data-category="Obras extranjeras">Obras extranjeras</button>
-    <button data-category="Obras nacionales">Obras nacionales</button>
-    <button data-category="Libros preuniversitarios">Libros preuniversitarios</button>
-    <a href="/">👤 Pantalla de usuario</a>
-  </nav>
-
-  <main class="adminMain">
-    <div id="adminStatus" class="statusStrip">Conectado a Supabase.</div>
-
-    <div class="kpis">
-      <div class="kpi"><span>Total libros</span><b id="kpiBooks">0</b></div>
-      <div class="kpi"><span>Stock total</span><b id="kpiStock">0</b></div>
-      <div class="kpi"><span>Unidades vendidas</span><b id="kpiSold">0</b></div>
-      <div class="kpi"><span>Acumulado</span><b id="kpiMoney">Bs 0</b></div>
+    
+    <hr>
+    
+    <div id="gestion-categorias">
+        <h3>Gestionar Categorías</h3>
+        <input type="text" id="nueva-categoria" placeholder="Nombre de nueva categoría">
+        <button id="btn-agregar-categoria">Agregar Categoría</button>
+        <ul id="lista-categorias">
+            <!-- Cargado dinámicamente -->
+        </ul>
     </div>
 
-    <section id="seedSection" class="card seedCard hidden">
-      <h3 style="margin-top:0">Importar tu avance actual</h3>
-      <p>La base está vacía. Puedes cargar los libros que ya estaban en tu archivo HTML y migrar las portadas incrustadas a Supabase Storage.</p>
-      <button id="seedBtn" class="btn primary">IMPORTAR DATOS DEL HTML ORIGINAL</button>
-      <p class="hint">Este botón solo se habilita cuando la tabla de libros está vacía.</p>
-    </section>
-
-    <section class="card">
-      <div class="sectionTitle">
-        <div>
-          <h2 id="categoryTitle">Obras extranjeras</h2>
-          <div class="hint" id="categoryCount"></div>
-        </div>
-        <button class="btn primary" id="newBookBtn">+ AGREGAR LIBRO</button>
-      </div>
-
-      <div class="toolbar">
-        <input id="adminSearch" placeholder="Buscar por código, título o autor">
-        <button class="btn ghost" id="refreshBtn">↻ Actualizar</button>
-      </div>
-
-      <div id="adminMsg" class="hint">Cargando...</div>
-      <div class="tableWrap">
-        <table id="adminTable" class="hidden">
-          <thead>
-            <tr>
-              <th>Portada</th><th>Código</th><th>Título</th><th>Autor</th>
-              <th>P. venta</th><th>Stock</th><th>Vendidas</th><th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
-</section>
-
-<div id="bookModal" class="modal" aria-hidden="true">
-  <div class="modalCard">
-    <h2 id="bookModalTitle" style="margin-top:0">Agregar libro</h2>
-    <form id="bookForm">
-      <input id="bookId" type="hidden">
-      <div class="formGrid">
-        <div>
-          <label class="small">Categoría</label>
-          <select id="categoria" required>
-            <option>Obras extranjeras</option>
-            <option>Obras nacionales</option>
-            <option>Libros preuniversitarios</option>
-          </select>
-        </div>
-        <div><label class="small">Código</label><input id="codigo"></div>
-        <div><label class="small">Título</label><input id="titulo" required></div>
-        <div><label class="small">Autor</label><input id="autor"></div>
-        <div><label class="small">Género</label><input id="genero"></div>
-        <div><label class="small">Precio caja (Bs)</label><input id="precio_caja" type="number" step="0.01"></div>
-        <div><label class="small">Unidades por caja</label><input id="unidades_caja" type="number" step="1" min="0"></div>
-        <div><label class="small">Precio compra (Bs)</label><input id="precio_compra" type="number" step="0.01"></div>
-        <div><label class="small">Precio venta (Bs)</label><input id="precio_venta" type="number" step="0.01"></div>
-        <div><label class="small">Precio por mayor (Bs)</label><input id="precio_mayor" type="number" step="0.01"></div>
-        <div><label class="small">Stock</label><input id="stock" type="number" step="1" min="0" value="0"></div>
-        <div><label class="small">Vendidas</label><input id="vendidas" type="number" step="1" min="0" value="0"></div>
-        <div><label class="small">Acumulado (Bs)</label><input id="acumulado" type="number" step="0.01" min="0" value="0"></div>
-        <div>
-          <label class="small">Visible en catálogo</label>
-          <select id="activo"><option value="true">Sí</option><option value="false">No</option></select>
-        </div>
-
-        <div class="full fileBox">
-          <label class="small">Portada del libro</label>
-          <input id="portadaFile" type="file" accept="image/jpeg,image/png,image/webp">
-          <div class="hint">Se optimiza automáticamente a WebP antes de subir. Recomendado: portada vertical.</div>
-          <div id="coverPreview" class="filePreview">Sin portada seleccionada.</div>
-          <label style="display:flex;align-items:center;gap:8px;margin-top:8px;width:max-content">
-            <input id="removeCover" type="checkbox" style="width:auto"> Quitar portada actual
-          </label>
-        </div>
-
-        <div class="full fileBox">
-          <label class="small">PDF de índice / muestra</label>
-          <input id="pdfFile" type="file" accept="application/pdf">
-          <div class="hint">Se recomienda un PDF pequeño con índice, prólogo o algunas páginas de muestra.</div>
-          <div id="pdfPreview" class="filePreview">Sin PDF seleccionado.</div>
-          <label style="display:flex;align-items:center;gap:8px;margin-top:8px;width:max-content">
-            <input id="removePdf" type="checkbox" style="width:auto"> Quitar PDF actual
-          </label>
-        </div>
-      </div>
-      <div class="modalActions">
-        <button type="button" class="btn ghost" id="cancelBookBtn">Cancelar</button>
-        <button type="submit" class="btn primary" id="saveBookBtn">Guardar libro</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div id="saleModal" class="modal" aria-hidden="true">
-  <div class="modalCard" style="max-width:520px">
-    <h2 style="margin-top:0">Registrar venta</h2>
-    <p id="saleBookInfo"></p>
-    <div class="formGrid">
-      <div><label class="small">Cantidad</label><input id="saleQty" type="number" min="1" step="1" value="1"></div>
-      <div><label class="small">Precio unitario aplicado</label><input id="saleUnitPrice" readonly></div>
-    </div>
-    <p id="saleTotal" class="hint"></p>
-    <div class="modalActions">
-      <button class="btn ghost" id="cancelSaleBtn" type="button">Cancelar</button>
-      <button class="btn success" id="confirmSaleBtn" type="button">CONFIRMAR VENTA</button>
-    </div>
-  </div>
-</div>
-
-<div id="toast" class="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/js/config.js"></script>
-<script src="/js/supabase-client.js"></script>
-<script src="/js/admin.js"></script>
+    <script src="../js/admin.js"></script>
 </body>
 </html>

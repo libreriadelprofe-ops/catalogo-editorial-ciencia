@@ -1,53 +1,44 @@
+// Lógica de catálogo actualizada
+const buscador = document.getElementById('buscador-libros');
+const grilla = document.getElementById('grilla-libros');
+const detalle = document.getElementById('detalle-libro');
+const contenido = document.getElementById('contenido-detalle');
+const btnVolver = document.getElementById('btn-volver');
 
-let allBooks=[], currentCategory="", currentSelected=null;
-const $=id=>document.getElementById(id);
-function showConfigWarning(){ $("configWarning").classList.remove("hidden"); }
-function money(n){return "Bs. "+Number(n||0).toFixed(2)}
-function esc(x){return String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-async function loadCatalog(){
- if(!window.isSupabaseConfigured){showConfigWarning();return}
- const {data,error}=await dbClient.from("libros").select("id,codigo,categoria,titulo,autor,genero,precio_venta,precio_mayor,stock,portada_url,muestra_pdf_url,activo").eq("activo",true).order("titulo");
- if(error){$("resultsMsg").textContent="Error al cargar catálogo";return}
- allBooks=data||[]; renderResults();
+// Ejemplo: Esta variable debe llenarse con tu petición a Supabase
+let todosLosLibros = []; 
+
+buscador.addEventListener('input', (e) => {
+    const texto = e.target.value.toLowerCase();
+    const filtrados = todosLosLibros.filter(l => 
+        l.titulo.toLowerCase().includes(texto) || 
+        l.autor.toLowerCase().includes(texto)
+    );
+    // renderizarGrilla(filtrados); // Llama a tu función de renderizado
+});
+
+// Llamar a esta función al hacer clic en un libro
+function mostrarDetalleLibro(libro) {
+    grilla.style.display = 'none';
+    buscador.style.display = 'none';
+    detalle.style.display = 'block';
+    
+    let htmlDetalle = `<h2>${libro.titulo}</h2>`;
+    // htmlDetalle += `<p>Categoría: ${libro.categorias.nombre}</p>`;
+    
+    if(libro.ubicacion_img) {
+        htmlDetalle += `
+        <div class="ubicacion-container">
+            <h3>Ubicación</h3>
+            <img src="${libro.ubicacion_img}" alt="Ubicación del libro" style="max-width: 100%;">
+        </div>`;
+    }
+    
+    contenido.innerHTML = htmlDetalle;
 }
-function filteredBooks(){
- const q=$("search").value.trim().toLowerCase();
- return allBooks.filter(b=>{let cat=!currentCategory||b.categoria===currentCategory;let h=[b.codigo,b.titulo,b.autor,b.genero,b.categoria].join(" ").toLowerCase();return cat&&(!q||h.includes(q))})
-}
-function renderResults(){
- const books=filteredBooks(), grid=$("resultsGrid");
- grid.innerHTML="";
- $("resultCount").textContent=books.length+" libro(s)";
- $("resultsMsg").textContent=books.length?"Seleccione un libro para ver detalles":"No hay resultados";
- books.forEach(b=>{
-  let c=document.createElement("div"); c.className="bookCard";
-  c.innerHTML=`<img src="${esc(b.portada_url||'')}" onerror="this.style.display='none'"><b>${esc(b.titulo)}</b><small>${esc(b.autor||'')}</small>`;
-  c.onclick=()=>selectBook(b); grid.appendChild(c);
- });
- $("previewCard").classList.add("hidden");
-}
-function selectBook(book){
- currentSelected=book;
- $("previewCard").classList.remove("hidden");
- $("imageArea").outerHTML=`<img id="imageArea" src="${esc(book.portada_url||'')}" alt="Portada">`;
- $("previewInfo").innerHTML=`
- <h2>${esc(book.titulo)}</h2>
- <p><b>Autor:</b> ${esc(book.autor||'')}</p>
- <p><b>Código:</b> ${esc(book.codigo||'')}</p>
- <p><b>Estado:</b> ${Number(book.stock)>0?'Disponible':'Agotado'}</p>
- <div class="orangeButtons">
- <button class="btn orange" onclick="openWhatsapp()">🟢 WhatsApp</button>
- <button class="btn orange" ${book.muestra_pdf_url?'':'disabled'} onclick="openPdf()">📄 Muestra</button>
- </div>`;
-}
-function openWhatsapp(){
- let b=currentSelected;
- let msg=`Hola, deseo cotizar este libro:%0A%0ATítulo: ${b.titulo}%0AAutor: ${b.autor}%0ACódigo: ${b.codigo}%0APrecio: ${money(b.precio_venta)}`;
- window.open("https://wa.me/59167655641?text="+msg,"_blank");
-}
-function openPdf(){if(currentSelected?.muestra_pdf_url){$("pdfFrame").src=currentSelected.muestra_pdf_url;$("pdfModal").classList.add("open")}}
-function closePdf(){$("pdfModal").classList.remove("open");$("pdfFrame").src=""}
-$("searchBtn").onclick=renderResults;$("search").oninput=renderResults;
-document.querySelectorAll("#categoryPills button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#categoryPills button").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentCategory=b.dataset.category;renderResults()});
-$("closePdf").onclick=closePdf;
-loadCatalog();
+
+btnVolver.addEventListener('click', () => {
+    detalle.style.display = 'none';
+    grilla.style.display = 'block'; // o grid/flex
+    buscador.style.display = 'block';
+});
