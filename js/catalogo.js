@@ -34,8 +34,6 @@ function selectBook(book){
  <h2>${esc(book.titulo)}</h2>
  <p><b>Autor:</b> ${esc(book.autor||'')}</p>
  <p><b>Código:</b> ${esc(book.codigo||'')}</p>
- <p><b>Categoría:</b> ${esc(book.categoria)}</p>
- <p><b>Precio:</b> ${money(book.precio_venta)}</p>
  <p><b>Estado:</b> ${Number(book.stock)>0?'Disponible':'Agotado'}</p>
  <div class="orangeButtons">
  <button class="btn orange" onclick="openWhatsapp()">🟢 WhatsApp</button>
