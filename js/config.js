@@ -7,6 +7,6 @@
   IMPORTANTE: nunca coloques la service_role key en este archivo.
 */
 window.APP_CONFIG = {
-  SUPABASE_URL: "PEGA_AQUI_TU_SUPABASE_URL",
-  SUPABASE_KEY: "PEGA_AQUI_TU_PUBLISHABLE_O_ANON_KEY"
+  SUPABASE_URL: "https://srxiazqrbrstzfxulgbu.supabase.co/rest/v1/",
+  SUPABASE_KEY: "sb_publishable_uM-IAnslSsv2ZEUfSNxvzw_xN6DHii2"
 };
