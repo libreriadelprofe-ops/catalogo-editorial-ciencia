@@ -22,6 +22,20 @@ Esto crea:
 - bucket `portadas` de hasta 2 MB por imagen;
 - bucket `muestras-pdf` de hasta 6 MB por PDF.
 
+### 1.1 Categorías editables
+
+Después de `setup.sql`, ejecuta también `supabase/migracion_categorias.sql`. Crea la tabla `categorias`
+y permite, desde `/admin/`, editar el título de cada categoría y agregar nuevas.
+
+### 1.2 Configuración de la librería (celular, ubicación y logo)
+
+Ejecuta también `supabase/migracion_configuracion.sql`. Luego, en `/admin/`, el botón
+**⚙️ Configuración** del encabezado permite:
+
+- cambiar el número de celular que recibe los mensajes de WhatsApp;
+- poner el enlace de Google Maps y/o subir una imagen de la ubicación (botón 📍 Ubicación del usuario);
+- subir el logo, que aparece en el encabezado a la derecha.
+
 ## 2. Crear el administrador
 
 En Supabase:

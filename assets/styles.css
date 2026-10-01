@@ -102,3 +102,19 @@ textarea{min-height:90px;resize:vertical}
 .bookCard b,.bookCard small{display:block;margin-top:8px}
 .orange{background:#ff7a00;color:white}.orangeButtons{display:flex;gap:10px;margin-top:15px}
 .hidden{display:none!important}
+
+/* Detalle de libro (usuario) */
+.grid2.single{grid-template-columns:1fr;max-width:760px;margin:0 auto}
+.backBtn{align-self:flex-start;margin-bottom:14px}
+.orangeButtons{flex-wrap:wrap}
+.bookCard:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.preview .badge{vertical-align:middle}
+/* Categorías (admin) */
+#newCatBtn{border-style:dashed;color:var(--blue)}
+
+/* Logo en el encabezado (lado derecho) */
+.siteLogo{height:58px;max-width:200px;object-fit:contain;background:#fff;border-radius:10px;padding:5px 8px;margin-left:auto;flex-shrink:0}
+.headerActions+.siteLogo{margin-left:0}
+.locImg{display:block;max-width:100%;max-height:70vh;margin:14px auto 0;border-radius:10px;border:1px solid var(--border)}
+.filePreview img.wide{width:auto;max-width:170px;height:80px;object-fit:contain;background:#fff}
+@media(max-width:650px){.siteLogo{height:46px;margin-left:0}}

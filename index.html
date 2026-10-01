@@ -12,6 +12,7 @@
     <h1>EDITORIAL CIENCIA — Catálogo de libros</h1>
     <p>Consulta obras extranjeras, obras nacionales y libros preuniversitarios.</p>
   </div>
+  <img id="siteLogo" class="siteLogo hidden" alt="Logo de la librería">
 </header>
 
 <main class="pageShell">
@@ -29,15 +30,10 @@
     <div class="hint" style="margin-top:7px">También puedes presionar Enter.</div>
   </div>
 
-  <div class="categoryPills" id="categoryPills">
-    <button class="active" data-category="">Todos</button>
-    <button data-category="Obras extranjeras">Obras extranjeras</button>
-    <button data-category="Obras nacionales">Obras nacionales</button>
-    <button data-category="Libros preuniversitarios">Libros preuniversitarios</button>
-  </div>
+  <div class="categoryPills" id="categoryPills"></div>
 
-  <div class="grid2">
-    <section class="card">
+  <div class="grid2" id="catalogLayout">
+    <section class="card" id="resultsSection">
       <div class="sectionTitle">
         <h2 style="font-size:18px">Resultados</h2>
         <span class="hint" id="resultCount"></span>
@@ -46,7 +42,8 @@
 <div id="resultsGrid"></div>
     </section>
    <section id="previewCard" class="card preview">
-      <div id="imageArea" class="noimg">Sin imagen disponible</div>
+      <button id="backBtn" class="btn ghost backBtn" type="button">← Ver todos los libros</button>
+      <div id="imageWrap"><div class="noimg">Sin imagen disponible</div></div>
       <div id="previewInfo" class="previewInfo">
         <h2>Selecciona una obra</h2>
         <p class="muted">Aquí se mostrará la información del libro y, si existe, su PDF de índice o muestra.</p>
@@ -64,6 +61,19 @@
       <button class="btn ghost" id="closePdf">Cerrar</button>
     </div>
     <iframe id="pdfFrame" class="pdfFrame" title="PDF de muestra"></iframe>
+  </div>
+</div>
+
+<div id="locModal" class="modal" aria-hidden="true">
+  <div class="modalCard" style="max-width:760px">
+    <div class="sectionTitle">
+      <h2>Ubicación de la librería</h2>
+      <button class="btn ghost" id="closeLoc" type="button">Cerrar</button>
+    </div>
+    <img id="locImg" class="locImg" alt="Ubicación de la librería">
+    <div class="modalActions">
+      <a id="locLink" class="btn orange hidden" target="_blank" rel="noopener" style="text-decoration:none">📍 Abrir en el mapa</a>
+    </div>
   </div>
 </div>
 

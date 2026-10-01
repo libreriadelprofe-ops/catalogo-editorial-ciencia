@@ -1,8 +1,7 @@
 
 const $=id=>document.getElementById(id);
-const CATEGORIES=["Obras extranjeras","Obras nacionales","Libros preuniversitarios"];
 let books=[];
-let currentCategory=CATEGORIES[0];
+let currentCategory="";
 let editingBook=null;
 let saleBook=null;
 
@@ -25,11 +24,10 @@ function publicUrl(bucket,path){
 function safeExt(file, fallback){
   const name=file?.name||""; const m=name.match(/\.([a-zA-Z0-9]+)$/); return m?m[1].toLowerCase():fallback;
 }
-async function optimizeCover(file){
+async function optimizeCover(file,maxW=1000,maxH=1500){
   if(!file)return null;
   if(file.size>8*1024*1024) throw new Error("La imagen original supera 8 MB.");
   const bitmap=await createImageBitmap(file);
-  const maxW=1000,maxH=1500;
   const scale=Math.min(1,maxW/bitmap.width,maxH/bitmap.height);
   const canvas=document.createElement("canvas");
   canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);
@@ -75,7 +73,8 @@ function setSessionView(session){
   $("loginView").classList.toggle("hidden",logged);
   $("adminView").classList.toggle("hidden",!logged);
   $("logoutBtn").classList.toggle("hidden",!logged);
-  if(logged) loadBooks();
+  $("settingsBtn").classList.toggle("hidden",!logged);
+  if(logged){loadSiteSettings();loadAll();}
 }
 $("loginForm").onsubmit=async e=>{
   e.preventDefault();
@@ -142,14 +141,80 @@ function renderCategory(){
   });
 }
 
-document.querySelectorAll(".adminNav button[data-category]").forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll(".adminNav button[data-category]").forEach(x=>x.classList.remove("active"));
-    btn.classList.add("active");currentCategory=btn.dataset.category;$("adminSearch").value="";renderCategory();
-  };
-});
+// ---------- Categorías ----------
+const DEFAULT_CATEGORIES=["Obras extranjeras","Obras nacionales","Libros preuniversitarios"];
+let categories=[], categoriesReady=false, editingCat=null;
+
+async function loadCategories(){
+  const {data,error}=await dbClient.from("categorias").select("id,nombre,orden").order("orden").order("nombre");
+  if(error||!data?.length){
+    categoriesReady=false;
+    categories=DEFAULT_CATEGORIES.map(n=>({id:null,nombre:n,orden:0}));
+    $("adminStatus").textContent="Para editar o agregar categorías, ejecuta supabase/migracion_categorias.sql en Supabase.";
+  }else{
+    categoriesReady=true;categories=data;
+    $("adminStatus").textContent="Conectado a Supabase.";
+  }
+  if(!categories.some(c=>c.nombre===currentCategory))currentCategory=categories[0].nombre;
+  renderNav();fillCategorySelect();
+}
+function renderNav(){
+  document.querySelectorAll(".adminNav button[data-category]").forEach(b=>b.remove());
+  const anchor=$("newCatBtn");
+  categories.forEach(c=>{
+    const b=document.createElement("button");b.type="button";b.dataset.category=c.nombre;b.textContent=c.nombre;
+    if(c.nombre===currentCategory)b.classList.add("active");
+    b.onclick=()=>{currentCategory=c.nombre;$("adminSearch").value="";renderNav();renderCategory()};
+    anchor.parentNode.insertBefore(b,anchor);
+  });
+}
+function fillCategorySelect(){
+  const sel=$("categoria"),prev=sel.value;
+  sel.innerHTML=categories.map(c=>`<option>${esc(c.nombre)}</option>`).join("");
+  if(categories.some(c=>c.nombre===prev))sel.value=prev;
+}
+function openCat(cat){
+  if(!categoriesReady){toast("Primero ejecuta supabase/migracion_categorias.sql en Supabase.","error");return}
+  editingCat=cat||null;
+  $("catModalTitle").textContent=cat?"Editar título de la categoría":"Nueva categoría";
+  $("catName").value=cat?.nombre||"";
+  $("deleteCatBtn").classList.toggle("hidden",!cat);
+  openModal("catModal");$("catName").focus();
+}
+$("newCatBtn").onclick=()=>openCat(null);
+$("editCatBtn").onclick=()=>openCat(categories.find(c=>c.nombre===currentCategory));
+$("cancelCatBtn").onclick=()=>closeModal("catModal");
+$("catModal").onclick=e=>{if(e.target.id==="catModal")closeModal("catModal")};
+$("catForm").onsubmit=async e=>{
+  e.preventDefault();
+  const name=$("catName").value.trim().replace(/\s+/g," ");
+  if(!name){toast("Escribe un título.","error");return}
+  if(categories.some(c=>c.id!==editingCat?.id&&c.nombre.toLocaleLowerCase("es")===name.toLocaleLowerCase("es"))){toast("Ya existe una categoría con ese título.","error");return}
+  const btn=$("saveCatBtn");setBusy(btn,true,"Guardando...");
+  let error;
+  if(editingCat){
+    ({error}=await dbClient.from("categorias").update({nombre:name}).eq("id",editingCat.id));
+    if(!error&&currentCategory===editingCat.nombre)currentCategory=name;
+  }else{
+    const orden=categories.reduce((m,c)=>Math.max(m,c.orden||0),0)+1;
+    ({error}=await dbClient.from("categorias").insert({nombre:name,orden}));
+    if(!error)currentCategory=name;
+  }
+  setBusy(btn,false);
+  if(error){toast(error.message,"error");return}
+  closeModal("catModal");toast("Categoría guardada","okay");await loadAll();
+};
+$("deleteCatBtn").onclick=async()=>{
+  if(!editingCat)return;
+  if(books.some(b=>b.categoria===editingCat.nombre)){toast("Solo se pueden eliminar categorías sin libros. Mueve o elimina sus libros primero.","error");return}
+  if(!confirm(`¿Eliminar la categoría “${editingCat.nombre}”?`))return;
+  const {error}=await dbClient.from("categorias").delete().eq("id",editingCat.id);
+  if(error){toast(error.message,"error");return}
+  closeModal("catModal");toast("Categoría eliminada","okay");await loadAll();
+};
+async function loadAll(){await loadCategories();await loadBooks()}
 $("adminSearch").addEventListener("input",renderCategory);
-$("refreshBtn").onclick=loadBooks;
+$("refreshBtn").onclick=loadAll;
 $("newBookBtn").onclick=()=>openBook(null);
 
 function fillFilePreviews(book){
@@ -312,7 +377,74 @@ $("seedBtn").onclick=async()=>{
   }finally{setBusy(btn,false)}
 };
 
+// ---------- Configuración de la librería ----------
+async function uploadConfigImage(file,name,maxW,maxH){
+  const blob=await optimizeCover(file,maxW,maxH);
+  const path=`config/${Date.now()}-${name}.webp`;
+  const {error}=await dbClient.storage.from("portadas").upload(path,blob,{contentType:"image/webp",cacheControl:"3600",upsert:false});
+  if(error)throw error;
+  return {path,url:publicUrl("portadas",path)};
+}
+function fillSettingsPreviews(){
+  const s=window.siteSettings||{};
+  $("cfgUbicPreview").innerHTML=s.ubicacion_imagen_url?`<img class="wide" src="${esc(s.ubicacion_imagen_url)}" alt=""><span>Imagen actual.</span>`:"Sin imagen de ubicación.";
+  $("cfgLogoPreview").innerHTML=s.logo_url?`<img class="wide" src="${esc(s.logo_url)}" alt=""><span>Logo actual.</span>`:"Sin logo.";
+}
+async function openSettings(){
+  await loadSiteSettings();
+  const s=window.siteSettings||{};
+  $("cfgWhatsapp").value=s.whatsapp||"";
+  $("cfgUbicUrl").value=s.ubicacion_url||"";
+  ["cfgUbicFile","cfgLogoFile"].forEach(id=>$(id).value="");
+  ["cfgUbicRemove","cfgLogoRemove"].forEach(id=>$(id).checked=false);
+  fillSettingsPreviews();openModal("settingsModal");
+}
+function previewPicked(inputId,boxId){
+  $(inputId).onchange=e=>{
+    const f=e.target.files[0];if(!f)return fillSettingsPreviews();
+    $(boxId).innerHTML=`<img class="wide" src="${URL.createObjectURL(f)}" alt=""><span>${esc(f.name)} · ${(f.size/1024).toFixed(0)} KB</span>`;
+  };
+}
+previewPicked("cfgUbicFile","cfgUbicPreview");previewPicked("cfgLogoFile","cfgLogoPreview");
+$("settingsBtn").onclick=openSettings;
+$("cancelSettingsBtn").onclick=()=>closeModal("settingsModal");
+$("settingsModal").onclick=e=>{if(e.target.id==="settingsModal")closeModal("settingsModal")};
+$("settingsForm").onsubmit=async e=>{
+  e.preventDefault();
+  const btn=$("saveSettingsBtn");setBusy(btn,true,"Guardando...");
+  const old=window.siteSettings||{};
+  let newLogo=null,newLoc=null;
+  try{
+    const wa=$("cfgWhatsapp").value.replace(/\D/g,"");
+    if(wa&&(wa.length<8||wa.length>15))throw new Error("El número de celular no es válido. Escribe solo dígitos, por ejemplo 67655641 o 59167655641.");
+    const link=$("cfgUbicUrl").value.trim();
+    if(link&&!/^https?:\/\//i.test(link))throw new Error("El enlace de ubicación debe empezar con http:// o https://");
+    if($("cfgLogoFile").files[0])newLogo=await uploadConfigImage($("cfgLogoFile").files[0],"logo",600,300);
+    if($("cfgUbicFile").files[0])newLoc=await uploadConfigImage($("cfgUbicFile").files[0],"ubicacion",1600,1600);
+
+    const payload={id:1,whatsapp:wa||null,ubicacion_url:link||null,updated_at:new Date().toISOString()};
+    if(newLogo){payload.logo_path=newLogo.path;payload.logo_url=newLogo.url}
+    else if($("cfgLogoRemove").checked){payload.logo_path=null;payload.logo_url=null}
+    if(newLoc){payload.ubicacion_imagen_path=newLoc.path;payload.ubicacion_imagen_url=newLoc.url}
+    else if($("cfgUbicRemove").checked){payload.ubicacion_imagen_path=null;payload.ubicacion_imagen_url=null}
+
+    const {error}=await dbClient.from("configuracion").upsert(payload);
+    if(error)throw error;
+
+    if((newLogo||$("cfgLogoRemove").checked)&&old.logo_path)await removeStorageObject("portadas",old.logo_path);
+    if((newLoc||$("cfgUbicRemove").checked)&&old.ubicacion_imagen_path)await removeStorageObject("portadas",old.ubicacion_imagen_path);
+    await loadSiteSettings();
+    closeModal("settingsModal");toast("Configuración guardada","okay");
+  }catch(err){
+    console.error(err);
+    if(newLogo?.path)await removeStorageObject("portadas",newLogo.path);
+    if(newLoc?.path)await removeStorageObject("portadas",newLoc.path);
+    const missing=/configuracion/i.test(err.message||"");
+    toast(missing?"Primero ejecuta supabase/migracion_configuracion.sql en Supabase.":(err.message||"No se pudo guardar."),"error");
+  }finally{setBusy(btn,false)}
+};
+
 document.addEventListener("keydown",e=>{
-  if(e.key==="Escape"){closeModal("bookModal");closeModal("saleModal")}
+  if(e.key==="Escape"){closeModal("bookModal");closeModal("saleModal");closeModal("catModal");closeModal("settingsModal")}
 });
 init();

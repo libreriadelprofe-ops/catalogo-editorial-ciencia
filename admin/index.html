@@ -14,8 +14,10 @@
   </div>
   <div class="headerActions">
     <a class="headerLink" href="/">👤 Ver catálogo usuario</a>
+    <button id="settingsBtn" class="headerLink hidden" type="button">⚙️ Configuración</button>
     <button id="logoutBtn" class="headerLink hidden" type="button">Cerrar sesión</button>
   </div>
+  <img id="siteLogo" class="siteLogo hidden" alt="Logo de la librería">
 </header>
 
 <section id="loginView" class="loginWrap">
@@ -41,9 +43,7 @@
 <section id="adminView" class="adminLayout hidden">
   <nav class="adminNav">
     <h3>Administración</h3>
-    <button class="active" data-category="Obras extranjeras">Obras extranjeras</button>
-    <button data-category="Obras nacionales">Obras nacionales</button>
-    <button data-category="Libros preuniversitarios">Libros preuniversitarios</button>
+    <button id="newCatBtn" type="button">+ Nueva categoría</button>
     <a href="/">👤 Pantalla de usuario</a>
   </nav>
 
@@ -69,6 +69,7 @@
         <div>
           <h2 id="categoryTitle">Obras extranjeras</h2>
           <div class="hint" id="categoryCount"></div>
+          <button class="btn ghost" id="editCatBtn" type="button" style="margin-top:8px">✏️ Editar título de la categoría</button>
         </div>
         <button class="btn primary" id="newBookBtn">+ AGREGAR LIBRO</button>
       </div>
@@ -102,11 +103,7 @@
       <div class="formGrid">
         <div>
           <label class="small">Categoría</label>
-          <select id="categoria" required>
-            <option>Obras extranjeras</option>
-            <option>Obras nacionales</option>
-            <option>Libros preuniversitarios</option>
-          </select>
+          <select id="categoria" required></select>
         </div>
         <div><label class="small">Código</label><input id="codigo"></div>
         <div><label class="small">Título</label><input id="titulo" required></div>
@@ -148,6 +145,63 @@
       <div class="modalActions">
         <button type="button" class="btn ghost" id="cancelBookBtn">Cancelar</button>
         <button type="submit" class="btn primary" id="saveBookBtn">Guardar libro</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="catModal" class="modal" aria-hidden="true">
+  <div class="modalCard" style="max-width:480px">
+    <h2 id="catModalTitle" style="margin-top:0">Nueva categoría</h2>
+    <form id="catForm">
+      <label class="small" for="catName">Título de la categoría</label>
+      <input id="catName" maxlength="80" required>
+      <p class="hint">Al cambiar el título, todos los libros de la categoría se actualizan automáticamente.</p>
+      <div class="modalActions">
+        <button type="button" class="btn danger hidden" id="deleteCatBtn">Eliminar</button>
+        <button type="button" class="btn ghost" id="cancelCatBtn">Cancelar</button>
+        <button type="submit" class="btn primary" id="saveCatBtn">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="settingsModal" class="modal" aria-hidden="true">
+  <div class="modalCard" style="max-width:640px">
+    <h2 style="margin-top:0">Configuración de la librería</h2>
+    <form id="settingsForm">
+      <div class="formGrid">
+        <div class="full">
+          <label class="small" for="cfgWhatsapp">Número de celular (WhatsApp)</label>
+          <input id="cfgWhatsapp" type="tel" inputmode="tel" placeholder="Ej.: 67655641 o 59167655641" autocomplete="off">
+          <div class="hint">Aquí llegan los mensajes del botón WhatsApp. Con 8 dígitos se agrega el código de Bolivia (591).</div>
+        </div>
+
+        <div class="full fileBox">
+          <label class="small" for="cfgUbicUrl">Ubicación de la librería</label>
+          <input id="cfgUbicUrl" type="url" placeholder="Enlace de Google Maps, ej.: https://maps.app.goo.gl/...">
+          <div class="hint">Puedes poner solo el enlace, solo una imagen, o ambos. Con imagen, el usuario la ve en pantalla y, si hay enlace, también puede abrir el mapa.</div>
+          <label class="small" style="margin-top:10px" for="cfgUbicFile">Imagen de la ubicación (croquis o captura del mapa)</label>
+          <input id="cfgUbicFile" type="file" accept="image/jpeg,image/png,image/webp">
+          <div id="cfgUbicPreview" class="filePreview">Sin imagen de ubicación.</div>
+          <label style="display:flex;align-items:center;gap:8px;margin-top:8px;width:max-content">
+            <input id="cfgUbicRemove" type="checkbox" style="width:auto"> Quitar imagen actual
+          </label>
+        </div>
+
+        <div class="full fileBox">
+          <label class="small" for="cfgLogoFile">Logo de la librería</label>
+          <input id="cfgLogoFile" type="file" accept="image/jpeg,image/png,image/webp">
+          <div class="hint">Aparece en el encabezado, al lado derecho. Recomendado: PNG o WebP con fondo transparente.</div>
+          <div id="cfgLogoPreview" class="filePreview">Sin logo.</div>
+          <label style="display:flex;align-items:center;gap:8px;margin-top:8px;width:max-content">
+            <input id="cfgLogoRemove" type="checkbox" style="width:auto"> Quitar logo actual
+          </label>
+        </div>
+      </div>
+      <div class="modalActions">
+        <button type="button" class="btn ghost" id="cancelSettingsBtn">Cancelar</button>
+        <button type="submit" class="btn primary" id="saveSettingsBtn">Guardar configuración</button>
       </div>
     </form>
   </div>
